@@ -10,7 +10,7 @@ _redirect(){
 
   response="$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"http://$ip\" &3>/dev/null)"
 
-  if [ "$(echo \"$response\" | awk '{ print $3 }')" == "000" ]; then
+  if [ $(echo $response | awk '{ print $3 }') == '"000"' ]; then
     bot "$info" "Erro ao fazer o redirecionamento! :coffin:, preciso que alguém configure o master: 'ssh -p 22001 cluster@$ip'"
   else
     bot "$info" "Redirecionamento realizado com sucesso :frenetico:"
