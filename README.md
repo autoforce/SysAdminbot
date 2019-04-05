@@ -7,7 +7,9 @@ Diretório padrão: /etc/SysAdminbot
 cd /etc/
 git clone https://github.com/autoforce/SysAdminbot.git
 ln -sf /etc/SysAdminbot/bot.sh /bin/bot
+ln -s /etc/SysAdminbot/bot-verbose.sh /bin/bot-verbose
 chmod 775 /bin/bot
+chmod 775 /bin/bot-verbose 
 ```
 # Configurando
 ATENÇAO, antes de configurar é necessário definir as variaveis de definição em `./infos.conf`
