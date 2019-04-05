@@ -8,7 +8,7 @@ _redirect(){
   iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
   iptables -t nat -A POSTROUTING -j MASQUERADE
 
-  response="$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"http://$ip\" &3>/dev/null)"
+  response="$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"https://$ip\" &3>/dev/null)"
 
   if [ $(echo $response | awk '{ print $3 }') == '"000"' ]; then
     bot "$info" "Erro ao fazer o redirecionamento! :coffin:, preciso que alguém configure o master: 'ssh -p 22001 cluster@$ip'"
