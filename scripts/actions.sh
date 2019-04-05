@@ -9,11 +9,23 @@ _redirect(){
   iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
   iptables -t nat -A POSTROUTING -j MASQUERADE
 
-  response="curl -s -o /dev/null -I -w \"%{http_code}\" \"http://$ip\""
+  response="$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"http://$ip\" &3>/dev/null) "
 
-  if [ "$response" == "200" ]; then
-    bot "Redirecionamento realizado com sucesso :frenetico:"
-  else
+  if [ "printf \"$response\" | awk '{ print $3 }'" == "000" ]; then
     bot "Erro ao fazer o redirecionamento! :coffin:, preciso que alguém configure o master: 'ssh -p 22001 cluster@$ip'"
+  else
+    bot "Redirecionamento realizado com sucesso :frenetico:"
+  fi
+}
+
+_return(){
+  if [ $(systemctl start ngix) ]; then
+    echo "$success Nginx iniciado com sucesso, removendo regras do iptables..."
+    bot "Opa, o nginx iniciou normalmente por aqui, estou parando de redirecionar :oliver:"
+    iptables -t mangle -F
+    iptables -t nat -F
+    printf '1' > nginx
+  else
+    echo "$error Ops, nginx não está subindo :/"
   fi
 }
