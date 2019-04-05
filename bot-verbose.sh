@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-here=`dirname "$0"`
-cd "$here"
-
 . info.conf
 
 _send(){
