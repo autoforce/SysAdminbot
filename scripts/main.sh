@@ -10,4 +10,3 @@ printf '\e[0m'
 . ../info.conf
 . load.sh
 . checks.sh 
-
