@@ -9,5 +9,9 @@ git clone https://github.com/autoforce/SysAdminbot.git
 ln -sf /etc/SysAdminbot/bot.sh /bin/bot
 chmod 775 /bin/bot
 ```
+# Configurando
+ATENÇAO, antes de configurar é necessário definir as variaveis de definição em `./infos.conf`
+
+
 Então assim poderá executá-lo normalmente, consulte o padrão usando `bot --help`
 
