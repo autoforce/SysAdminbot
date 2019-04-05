@@ -1,34 +1,65 @@
 #!/usr/bin/env bash
 
 # 1: Ip address
-_redirect(){
-  echo 1 > /proc/sys/net/ipv4/ip_forward
+_pong(){
+  echo "$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"https://$ip\" &3>/dev/null)"
+}
 
-  iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination $1:80
-  iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
-  iptables -t nat -A POSTROUTING -j MASQUERADE
+_notify_redirect() {
+  response="$(echo $(_pong) | awk '{ print $3 }')" 
 
-  response="$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"https://$ip\" &3>/dev/null)"
-
-  if [ $(echo $response | awk '{ print $3 }') == '"000"' ]; then
+  if [ "$response" == '"000"' ]; then
     bot "$info" "Erro ao fazer o redirecionamento! :coffin:, preciso que alguém configure o master: 'ssh -p 22001 cluster@$ip'"
   else
     bot "$info" "Redirecionamento realizado com sucesso :frenetico:"
   fi
 }
 
-_return(){
-  systemctl start nginx
+_notify_success(){
+  bot "$info" "NGINX FUNCIONANDO E OPERANTE :god:"
+}
 
-  if [ "$?" == "0" ]; then
-    echo -e "$success Nginx iniciado com sucesso, removendo regras do iptables..."
-    bot "$info" 'Opa, o nginx iniciou normalmente por aqui, estou parando de redirecionar :oliver:'
-    iptables -t mangle -F
-    iptables -t nat -F
-    printf '1' > nginx
+_redirect(){
+  printf '0' > ../nginxOn
+  echo 1 > /proc/sys/net/ipv4/ip_forward
+
+  iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination $1:80
+  iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
+  iptables -t nat -A POSTROUTING -j MASQUERADE || bot "$info" -e "Não consegui nem se quer configurar o IPTABLES, houve algum erro :empenado:"
+}
+
+_reboot(){ 
+  systemctl restart nginx
+}
+
+_clear_rules(){
+  iptables -t mangle -F
+  iptables -t nat -F
+}
+
+_check(){
+  response="$(echo $(_pong) | awk '{ print $3 }')"
+
+  if [ "$response" == '"000"' ]; then
+    bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:"
+    _redirect "$slaveIp"
+    _reboot
   else
-    echo -e "$error Ops, nginx não está subindo :/"
-    bot "$verbose" -w "O NGINX nao está subindo, ele retorna:\`\`\`$(systemctl status nginx)\`\`\`"
+    _clear_rules
+    _recheck
+  fi
+}
+
+_recheck() {
+  response="$(echo $(_pong) | awk '{ print $3 }')"
+
+  if [ "$response" == '"000"' ]; then
+    bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect"
+    _redirect "$slaveIp"
+    _reboot 
+  else
+    _notify_success
+    printf '1' > ../nginxOn
   fi
 }
 
