@@ -19,13 +19,15 @@ _redirect(){
 }
 
 _return(){
-  if [ $(systemctl start ngix) ]; then
-    echo "$success Nginx iniciado com sucesso, removendo regras do iptables..."
-    bot "Opa, o nginx iniciou normalmente por aqui, estou parando de redirecionar :oliver:"
+  if [ $(systemctl start nginx) ]; then
+    echo -e "$success Nginx iniciado com sucesso, removendo regras do iptables..."
+    bot 'Opa, o nginx iniciou normalmente por aqui, estou parando de redirecionar :oliver:'
     iptables -t mangle -F
     iptables -t nat -F
     printf '1' > nginx
   else
-    echo "$error Ops, nginx não está subindo :/"
+    echo -e "$error Ops, nginx não está subindo :/"
+    bot-verbose -w "O NGINX nao está subindo, ele retorna:\`\`\`$(systemctl status nginx)\`\`\`"
   fi
 }
+

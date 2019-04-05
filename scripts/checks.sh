@@ -9,10 +9,10 @@ else
       "0" )
         echo -e "$error Nginx continua off"
       ;;
-      "1")
+      "1" )
         echo -e "$error Nginx inativo"
         printf "0" > ../nginxOn 
-	bot -e "O NGINX CAIU, estou redirecionando ele ao slave: $slaveIp ($slaveName)"
+	      bot -e "O NGINX CAIU, estou redirecionando ele ao slave: $slaveIp ($slaveName)"
         _redirect "$slaveIp"
       ;;
     esac

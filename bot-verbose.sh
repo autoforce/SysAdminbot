@@ -6,7 +6,6 @@ _send(){
   curl -X POST -H 'Content-type: application/json' \
   --data "{\"text\":\"$1\"}" \
   "$verbose"
-
 }
 
 _warning(){
