@@ -6,7 +6,7 @@ nginxOn="$(cat '../nginxOn')"
 if /usr/sbin/service nginx status | grep -q "active (running)"; then
     echo -e "$success Nginx ok"
     _clear_rules
-    if [ "$ninxOn" != "0" ];then
+    if [ "$nginxOn" != "0" ];then
       printf '0' > ../nginxOn
       _notify_success
     fi
