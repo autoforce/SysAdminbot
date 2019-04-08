@@ -8,6 +8,6 @@ printf '\e[0m'
 
 # Load modules and env. variables
 . ../info.conf
-. load.sh
+. ./load.sh
 . ./actions.sh
-. checks.sh 
+. ./checks.sh 

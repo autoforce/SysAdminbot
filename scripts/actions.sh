@@ -20,7 +20,7 @@ _notify_success(){
 }
 
 _redirect(){
-  printf '0' > ../nginxOn
+  printf "$(($(cat ../nginxOn)+1))" > ../nginxOn
   echo 1 > /proc/sys/net/ipv4/ip_forward
 
   iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination $1:80
@@ -41,9 +41,9 @@ _check(){
   response="$(echo $(_pong) | awk '{ print $3 }')"
 
   if [ "$response" == '"000"' ]; then
-    bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:"
+    [ "$(cat ../nginxOn)" == "0" ] && bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:"
     _redirect "$slaveIp"
-    _reboot
+    _reboot 
   else
     _clear_rules
     _recheck
@@ -54,12 +54,12 @@ _recheck() {
   response="$(echo $(_pong) | awk '{ print $3 }')"
 
   if [ "$response" == '"000"' ]; then
-    bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect"
     _redirect "$slaveIp"
     _reboot 
   else
     _notify_success
-    printf '1' > ../nginxOn
+    printf "$(date) - De acordo com sua regra de cron, houveram $(cat ../nginxOn) consultas e instabilidade" > ../downtime.log
+    printf '0' > ../nginxOn
   fi
 }
 
