@@ -1,6 +1,8 @@
 #!/bin/bash
 if /usr/sbin/service nginx status | grep -q "active (running)"; then
     echo -e "$success Nginx ok"
+    _clear_rules
+    printf '0' > ../nginxOn
 else
   if [ "$(cat '../nginxOn')" == "0" ];then
     echo -e "$error Nginx inativo"
