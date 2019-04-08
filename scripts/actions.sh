@@ -23,9 +23,9 @@ _redirect(){
   printf "$(($(cat ../nginxOn)+1))" > ../nginxOn
   echo 1 > /proc/sys/net/ipv4/ip_forward
 
-  iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination $1:80
-  iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
-  iptables -t nat -A POSTROUTING -j MASQUERADE || bot "$info" -e "Não consegui nem se quer configurar o IPTABLES, houve algum erro :empenado:"
+  /sbin/iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination $1:80
+  /sbin/iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination $1:443
+  /sbin/iptables -t nat -A POSTROUTING -j MASQUERADE || bot "$info" -e "Não consegui nem se quer configurar o IPTABLES, houve algum erro :empenado:"
 }
 
 _reboot(){ 
