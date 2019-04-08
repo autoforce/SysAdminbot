@@ -2,8 +2,8 @@
 
 # Default
 nginxOn="$(cat '../nginxOn')"
-
-if /usr/sbin/service nginx status | grep -q "active (running)"; then
+nginxStatus="$(/usr/sbin/service nginx status)"
+if printf "$nginxStatus" | grep -q "active (running)"; then
     echo -e "$success Nginx ok"
     _clear_rules
     if [ "$nginxOn" != "0" ];then
@@ -12,7 +12,8 @@ if /usr/sbin/service nginx status | grep -q "active (running)"; then
     fi
 else
   if [ "$nginxOn" == "0" ];then
-    echo -e "$error Nginx inativo"
+    echo -e "$error Nginx inativo" 
+    bot "$verbose" -e "\`\`\`$nginxStatus\`\`\`"
     _check
   else
     echo -e "$error Nginx continua OFF"
