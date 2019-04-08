@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default
-ninxOn="$(cat '../nginxOn')"
+nginxOn="$(cat '../nginxOn')"
 
 if /usr/sbin/service nginx status | grep -q "active (running)"; then
     echo -e "$success Nginx ok"
