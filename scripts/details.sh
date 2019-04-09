@@ -20,11 +20,11 @@ _memory(){
     if [ ! -e "/tmp/live-memorysend" ];then
       bot "$verbose" -w "Memória ocupando 500 MB"
       > /tmp/live-memorysend
-    else
-      if [ -e "/tmp/live-memorysend" ];then
-        rm -rf "/tmp/live-memorysend"
-        bot "$verbose" "Consumo de memória normalizado :frenetico:"
-      fi
+    fi
+  else
+    if [ -e "/tmp/live-memorysend" ];then
+      rm -rf "/tmp/live-memorysend"
+      bot "$verbose" "Consumo de memória normalizado :frenetico:"
     fi
   fi
 }
