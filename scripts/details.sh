@@ -17,7 +17,7 @@ _memory(){
     bot "$verbose" -e "\`\`\`$(_getMemoryProcess)\`\`\`"
     bot "$verbose" -e "veja o seu consumo:\`\`\`$(_getMemory)\`\`\`"
   elif [ "$percent" -lt "524288" ];then
-    if [ -ne "/tmp/live-memorysend" ];then
+    if [ ! -e "/tmp/live-memorysend" ];then
       bot "$verbose" -w "Memória ocupando 500 MB"
       > /tmp/live-memorysend
     else
