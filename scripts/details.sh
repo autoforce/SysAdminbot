@@ -20,6 +20,8 @@ _memory(){
     if [ -ne "/tmp/live-memorysend" ];then
       bot "$verbose" -w "Memória ocupando 500 MB"
       > /tmp/live-memorysend
+    else
+      [ -e "/tmp/live-memorysend" ] && rm -rf "/tmp/live-memorysend"
     fi
   fi
 }
