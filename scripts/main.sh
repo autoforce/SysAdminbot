@@ -11,3 +11,4 @@ printf '\e[0m'
 . ./load.sh
 . ./actions.sh
 . ./checks.sh 
+. ./details.sh
