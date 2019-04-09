@@ -1,11 +1,11 @@
 #!/usr/env/bin bash
 
 _getMemoryProcess(){
-  printf "$(ps -eo %mem,user,comm --sort -%mem | head -n 7)"
+  echo "$(ps -eo %mem,user,comm --sort -%mem | head -n 7)"
 }
 
 _getMemory(){
-  printf "$(free -h)"
+  echo "$(free -h)"
 }
 
 _memory(){
