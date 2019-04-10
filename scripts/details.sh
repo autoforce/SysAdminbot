@@ -8,7 +8,9 @@ _getMemory(){
   echo "$(free -h)"
 }
 
-
+_getStorage(){
+  echo "$(df --output=source,pcent,target)"
+}
 
 _memory(){
   percent="$(free | grep Mem | awk '{print $4}')"
@@ -29,4 +31,14 @@ _memory(){
   fi
 }
 
+_storage(){
+  percent="$(df -l / --output=pcent | tail -n 1 | sed 's/\%//')"
+  
+  if [ "$percent" -gt "95" ];then
+    bot "$verbose" -e 'Partição `/` está ocupando mais de 95%, olhe:'
+    bot "$verbose" -e "\`\`\`$(_getStorage)\`\`\`"
+  fi
+}
+
 _memory
+_storage
