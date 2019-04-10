@@ -52,11 +52,10 @@ _check(){
   response="$(echo $(_pong) | awk '{ print $3 }')"
 
   if [ "$response" == '"000"' ]; then
-    [ "$(cat ../nginxOn)" == "0" ] && \
-      { \
-        bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:" \
-        _email 'Nginx instável' 'Nginx iniciando, mas com problemas de conexão... Estou reestabelecendo regras de redirct pelo iptables.' \
-      }
+    if [ "$(cat ../nginxOn)" == "0" ];then
+        bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:" 
+        _email 'Nginx instável' 'Nginx iniciando, mas com problemas de conexão... Estou reestabelecendo regras de redirct pelo iptables.'
+    fi
     _redirect "$slaveIp"
     _reboot 
   else
