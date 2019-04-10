@@ -5,18 +5,29 @@ _pong(){
   echo "$(proxychains curl -o /dev/null --silent --head --write-out \"%{http_code}\" \"https://$ip\" &3>/dev/null)"
 }
 
+_email(){
+  # 1: Title
+  # 2: Text
+
+  curl -d "to=$to&amp;toname=Desenvolvimento&amp;subject=SysAdminBot%20$1&amp;text=$2&amp;from=$from&amp;api_user=$user&amp;api_key=$pass" \
+    https://api.sendgrid.com/api/mail.send.json || bot "$verbose" -e "Ao enviar email para $to contendo: \`\`\`$2\`\`\`"
+}
+
 _notify_redirect() {
   response="$(echo $(_pong) | awk '{ print $3 }')" 
 
   if [ "$response" == '"000"' ]; then
     bot "$info" "Erro ao fazer o redirecionamento! :coffin:, preciso que alguém configure o master: 'ssh -p 22001 cluster@$ip'"
+    _email 'Down erro, redirecionamento' 'Houve algum erro ao configurar o iptables, contudo o redirecionamento não funcionou, preciso que alguém configure-me, estou indisponível'
   else
     bot "$info" "Redirecionamento realizado com sucesso :frenetico:"
+    _email 'Sucesso, redirecionado' 'O redirecionamento através do iptables foi realizado com sucesso'
   fi
 }
 
 _notify_success(){
   bot "$info" "NGINX FUNCIONANDO E OPERANTE :god:"
+  _email 'Sucesso, normalizado' 'Normalizado, disponível através do Nginx normalmente'
 }
 
 _redirect(){
@@ -41,7 +52,11 @@ _check(){
   response="$(echo $(_pong) | awk '{ print $3 }')"
 
   if [ "$response" == '"000"' ]; then
-    [ "$(cat ../nginxOn)" == "0" ] && bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:"
+    [ "$(cat ../nginxOn)" == "0" ] && \
+      { \
+        bot "$info" -w "NGINX iniciado, mas com problemas de conexão, reestabelecendo regras de redirect :loucuracara:" \
+        _email 'Nginx instável' 'Nginx iniciando, mas com problemas de conexão... Estou reestabelecendo regras de redirct pelo iptables.' \
+      }
     _redirect "$slaveIp"
     _reboot 
   else
