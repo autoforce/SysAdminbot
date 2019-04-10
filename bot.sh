@@ -14,7 +14,7 @@ _send(){
   # 1: Id of chat
   # 2: Msg content
   curl -X POST -H 'Content-type: application/json' \
-  --data "{\"text\":\"$2\"}" \
+    --data "{\"text\":\"[_$(curl -4 ifconfig.co)_] $2\"}" \
   $1
 }
 
