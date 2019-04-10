@@ -18,5 +18,4 @@ ATENÇAO, antes de configurar é necessário definir as variaveis de definição
 nameserver 8.8.8.8
 ```
 
-Então assim poderá executá-lo normalmente, consulte o padrão usando `bot --help`
-
+Então assim poderá executá-lo normalmente, consulte o padrão usando `bot --help`.
