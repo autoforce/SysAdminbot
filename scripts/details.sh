@@ -16,14 +16,14 @@ _memory(){
   percent="$(free | grep Mem | awk '{print $4}')"
   if [ "$percent" -lt 224288 ];then
     if [ ! -e "/tmp/live-memorysend" ];then
-	bot "$verbose" -e "Memória ocupando menos de 200 MB, veja os *processos* que estão *consumindo*:"
+	bot "$verbose" -e "Memória restando menos de 200 MB, veja os *processos* que estão *consumindo*:"
 	bot "$verbose" -e "\`\`\`$(_getMemoryProcess)\`\`\`"
 	bot "$verbose" -e "veja o seu consumo:\`\`\`$(_getMemory)\`\`\`"
     	> /tmp/live-memorysend
     fi
   elif [ "$percent" -lt "524288" ];then
     if [ ! -e "/tmp/live-memorysend" ];then
-      bot "$verbose" -w "Memória ocupando 500 MB"
+      bot "$verbose" -w "Memória restando menos 500 MB"
       > /tmp/live-memorysend
     fi
   else
